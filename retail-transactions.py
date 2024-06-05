@@ -32,14 +32,21 @@ print(df_encoded)
 prod_df = df.drop(columns = ['ProductID'])
 encoded_df = pd.concat([prod_df, one_hot_encoder], axis = 1)
 
+# Ensure 'TransactionDate' is in datetime format
 prod_df['TransactionDate'] = pd.to_datetime(prod_df['TransactionDate'])
+
+# Extract month from 'TransactionDate'
 prod_df['Month'] = prod_df['TransactionDate'].dt.month
-spend_by_month = df.groupby('Month')['TotalAmount'].sum()
+
+# Group by month and sum 'TotalAmount'
+spend_by_month = prod_df.groupby('Month')['TotalAmount'].sum()
+
+# Plot the bar chart
 plt.bar(spend_by_month.index, spend_by_month.values)
-plt.title('Total Spend by Year')
-plt.xlabel('Year')
+plt.title('Total Spend by Month')
+plt.xlabel('Month')
 plt.ylabel('Total Spend')
-plt.xticks(spend_by_month.index)
+plt.xticks(spend_by_month.index, ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'])
 plt.show()
 
 encoded_df[['Books','Clothing', 'Electronics', 'Home Decor']] = encoded_df[['Books', 'Clothing', 'Electronics', 'Home Decor']].astype(int)
